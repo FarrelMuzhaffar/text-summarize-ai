@@ -88,7 +88,7 @@ async def summarize_text(input_text: str) -> str:
 
     async with aiohttp.ClientSession() as session:
         try:
-            async with session.post(OPENROUTER_API_URL, json=payload, headers=headers, timeout=60) as response:
+            async with session.post(OPENROUTER_API_URL, json=payload, headers=headers, timeout=120) as response:
                 logger.info(f"OpenRouter API response status: {response.status}")
                 if response.status != 200:
                     error_text = await response.text()
