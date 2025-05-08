@@ -85,7 +85,7 @@ async def summarize_text(input_text: str) -> str:
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
     }
     payload = {
-        "model": "google/gemini-2.0-flash-exp:free",
+        "model": "meta-llama/llama-3.1-8b-instruct:free",
         "messages": [
             {"role": "system", "content": "Buat ringkasan dari teks berikut."},
             {"role": "user", "content": prompt},
