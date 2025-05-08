@@ -720,7 +720,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeIcon = document.getElementById('close-icon');
 
     // API URL
-    const API_URL = "https://https://web-production-7dc7.up.railway.app/summarize";
+    const API_URL = "https://web-production-7dc7.up.railway.app/summarize";
 
     // State variables
     let isAboutAiOpen = false;
@@ -760,9 +760,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     inputFile.addEventListener('change', function() {
         if (inputFile.files.length > 0) {
-            fileInputLabel.textContent = inputFile.files[0].name;
+            const file = inputFile.files[0];
+            const validTypes = ['text/plain', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!validTypes.includes(file.type)) {
+                showNotification("⚠️ File harus berupa .txt, .docx, atau .pdf.");
+                inputFile.value = '';
+                fileInputLabel.textContent = 'Upload file';
+                return;
+            }
+
+            if (file.size > maxSize) {
+                showNotification("⚠️ Ukuran file maksimum adalah 5MB.");
+                inputFile.value = '';
+                fileInputLabel.textContent = 'Upload file';
+                return;
+            }
+
+            fileInputLabel.textContent = file.name;
         } else {
-            fileInputLabel.textContent = 'Belum ada file yang dipilih';
+            fileInputLabel.textContent = 'Upload file';
         }
     });
 
@@ -821,8 +839,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const formData = new FormData();
-        formData.append('action', 'deepseek_summarize_text');
-
         if (userInput) {
             formData.append('prompt', userInput);
             addMessageToUI('user', userInput, null);
@@ -833,7 +849,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         promptInput.value = '';
         inputFile.value = '';
-        fileInputLabel.textContent = 'Belum ada file yang dipilih';
+        fileInputLabel.textContent = 'Upload file';
         generateButton.disabled = true;
 
         loadingIndicator.style.display = 'block';
@@ -845,25 +861,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function callSummarizeAPI(formData) {
+        console.log('Sending request to:', API_URL);
         fetch(API_URL, {
             method: 'POST',
-            body: formData
+            body: formData,
+            signal: AbortSignal.timeout(60000) // 60 seconds timeout
         })
         .then(response => {
+            console.log('Response status:', response.status);
             if (!response.ok) {
-                throw new Error(`https error! Status: ${response.status}`);
+                return response.text().then(text => {
+                    throw new Error(`HTTP error! Status: ${response.status}, Body: ${text}`);
+                });
             }
             return response.json();
         })
         .then(data => {
+            console.log('Response data:', data);
             if (data.success) {
                 addMessageToUI('ai', data.data.text);
             } else {
+                console.error('API response unsuccessful:', data);
                 addMessageToUI('ai', 'Maaf, saya tidak dapat meringkas saat ini. Silakan coba lagi.');
             }
         })
         .catch(error => {
-            addMessageToUI('ai', 'Maaf, terjadi kesalahan dalam menghubungi layanan AI. Silakan periksa koneksi internet Anda dan coba lagi.');
+            console.error('Fetch error:', error.message);
+            addMessageToUI('ai', `Maaf, terjadi kesalahan dalam menghubungi layanan AI: ${error.message}. Silakan periksa koneksi internet Anda dan coba lagi.`);
         })
         .finally(() => {
             loadingIndicator.style.display = 'none';
@@ -1001,7 +1025,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'939b4291b8bdbcbf',t:'MTc0NjIyODEzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93c1e60dbf72454c',t:'MTc0NjYzMzI5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

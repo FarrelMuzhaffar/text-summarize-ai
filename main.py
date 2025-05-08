@@ -18,7 +18,7 @@ app = FastAPI()
 # Tambahkan CORS untuk mengizinkan frontend mengakses backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://web-production-7dc7.up.railway.app"],  # Batasi ke domain Railway
+    allow_origins=["*"],  # Sementara izinkan semua untuk debugging
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -115,6 +115,10 @@ async def summarize(
     if not prompt and not file:
         logger.error("No text or file provided")
         raise HTTPException(status_code=400, detail="Tidak ada teks atau file yang diunggah.")
+
+    if file and file.size > 5 * 1024 * 1024:  # 5MB limit
+        logger.error(f"File size too large: {file.size} bytes")
+        raise HTTPException(status_code=400, detail="Ukuran file terlalu besar. Maksimum 5MB.")
 
     input_text = ""
     if file:
