@@ -108,8 +108,8 @@
                 </div>
                 <div class="file-input-wrapper">
                     <input type="file" id="input_file" accept=".txt,.docx,.pdf" />
-                    <span class="file-input-button">Pilih File</span>
-                    <span class="file-input-label">Belum ada file yang dipilih</span>
+                    <span class="file-input-button"></span>
+                    <span class="file-input-label">Upload file</span>
                 </div>
                 <div class="input-footer">AI dapat membuat kesalahan. Periksa ringkasan penting.</div>
             </div>
@@ -720,7 +720,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeIcon = document.getElementById('close-icon');
 
     // API URL
-    const API_URL = "https://solusiai.free.nf/wp-admin/admin-ajax.php";
+    const API_URL = "https://https://web-production-7dc7.up.railway.app/summarize";
 
     // State variables
     let isAboutAiOpen = false;
@@ -751,7 +751,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     homeButton.addEventListener('click', function() {
-        window.location.href = 'index.html';
+        window.location.href = 'https://lintasai.com';
     });
 
     sidebarToggle.addEventListener('click', function() {
