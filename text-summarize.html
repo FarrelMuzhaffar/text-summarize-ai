@@ -866,7 +866,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(API_URL, {
             method: 'POST',
             body: formData,
-            signal: AbortSignal.timeout(60000) // 60 seconds timeout
+            signal: AbortSignal.timeout(120000) // 60 seconds timeout
         })
         .then(response => {
             console.log('Response status:', response.status);
