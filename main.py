@@ -7,6 +7,7 @@ import aiohttp
 import os
 import io
 import logging
+import time
 from typing import Optional
 
 # Configure logging
@@ -36,8 +37,9 @@ async def serve_html():
 
 async def extract_text_from_file(file: UploadFile) -> str:
     """
-    Ekstrak teks dari file .txt, .docx, atau .pdf.
+    Ekstrak teks dari file .txt, .docx, atau .pdf (maksimum 50 halaman untuk PDF).
     """
+    start_time = time.time()
     logger.info(f"Extracting text from file: {file.filename}")
     content = await file.read()
     filename = file.filename.lower()
@@ -45,20 +47,24 @@ async def extract_text_from_file(file: UploadFile) -> str:
     try:
         if filename.endswith(".txt"):
             text = content.decode("utf-8")
-            logger.info("Successfully extracted text from .txt")
+            logger.info(f"Successfully extracted text from .txt in {time.time() - start_time:.2f} seconds")
             return text
         elif filename.endswith(".docx"):
             doc = Document(io.BytesIO(content))
             text = "\n".join([para.text for para in doc.paragraphs if para.text.strip()])
-            logger.info("Successfully extracted text from .docx")
+            logger.info(f"Successfully extracted text from .docx in {time.time() - start_time:.2f} seconds")
             return text
         elif filename.endswith(".pdf"):
             pdf_reader = PyPDF2.PdfReader(io.BytesIO(content))
             text = ""
-            for page in pdf_reader.pages:
+            max_pages = 50  # Batas maksimum halaman
+            for page_num, page in enumerate(pdf_reader.pages[:max_pages], 1):
                 extracted = page.extract_text()
                 text += extracted or ""
-            logger.info("Successfully extracted text from .pdf")
+                logger.info(f"Extracted page {page_num}/{min(len(pdf_reader.pages), max_pages)}")
+            if len(pdf_reader.pages) > max_pages:
+                logger.warning(f"PDF truncated to {max_pages} pages (total pages: {len(pdf_reader.pages)})")
+            logger.info(f"Successfully extracted text from .pdf in {time.time() - start_time:.2f} seconds")
             return text
         else:
             logger.error(f"Unsupported file type: {filename}")
@@ -71,6 +77,7 @@ async def summarize_text(input_text: str) -> str:
     """
     Kirim teks ke OpenRouter untuk ringkasan.
     """
+    start_time = time.time()
     logger.info("Starting text summarization")
     prompt = f"Buat ringkasan dari teks berikut: {input_text}"
     headers = {
@@ -89,7 +96,7 @@ async def summarize_text(input_text: str) -> str:
     async with aiohttp.ClientSession() as session:
         try:
             async with session.post(OPENROUTER_API_URL, json=payload, headers=headers, timeout=60) as response:
-                logger.info(f"OpenRouter API response status: {response.status}")
+                logger.info(f"OpenRouter API response status: {response.status} in {time.time() - start_time:.2f} seconds")
                 if response.status != 200:
                     error_text = await response.text()
                     logger.error(f"OpenRouter API error: {error_text}")
@@ -98,6 +105,7 @@ async def summarize_text(input_text: str) -> str:
                 if "choices" not in data or not data["choices"]:
                     logger.error("OpenRouter API response missing choices")
                     raise HTTPException(status_code=500, detail="API tidak mengembalikan konten.")
+                logger.info(f"Summarization completed in {time.time() - start_time:.2f} seconds")
                 return data["choices"][0]["message"]["content"].strip()
         except Exception as e:
             logger.error(f"Error in summarize_text: {str(e)}")
@@ -111,6 +119,7 @@ async def summarize(
     """
     Endpoint untuk meringkas teks atau file.
     """
+    start_time = time.time()
     logger.info("Received summarize request")
     if not prompt and not file:
         logger.error("No text or file provided")
@@ -132,7 +141,7 @@ async def summarize(
 
     try:
         summary = await summarize_text(input_text)
-        logger.info("Summarization successful")
+        logger.info(f"Summarization successful in {time.time() - start_time:.2f} seconds")
         return {"success": True, "data": {"text": summary}}
     except Exception as e:
         logger.error(f"Summarization failed: {str(e)}")
