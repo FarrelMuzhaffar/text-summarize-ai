@@ -9,6 +9,7 @@ import io
 import logging
 import time
 from typing import Optional
+import asyncio
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -75,11 +76,18 @@ async def extract_text_from_file(file: UploadFile) -> str:
 
 async def summarize_text(input_text: str) -> str:
     """
-    Kirim teks ke OpenRouter untuk ringkasan.
+    Kirim teks ke OpenRouter untuk ringkasan menggunakan model meta-llama/llama-3.1-8b-instruct:free.
     """
     start_time = time.time()
     logger.info("Starting text summarization")
-    prompt = f"Buat ringkasan dari teks berikut: {input_text}"
+
+    # Batasi panjang teks input untuk mencegah error token
+    MAX_INPUT_LENGTH = 5000  # Batas ketat ~5.000 karakter
+    if len(input_text) > MAX_INPUT_LENGTH:
+        input_text = input_text[:MAX_INPUT_LENGTH]
+        logger.warning(f"Input text truncated to {MAX_INPUT_LENGTH} characters")
+
+    prompt = f"Buat ringkasan singkat dan jelas dari teks berikut. Fokus pada poin-poin utama dan hindari detail yang tidak relevan:\n\n{input_text}"
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
@@ -87,26 +95,40 @@ async def summarize_text(input_text: str) -> str:
     payload = {
         "model": "meta-llama/llama-3.1-8b-instruct:free",
         "messages": [
-            {"role": "system", "content": "Buat ringkasan dari teks berikut."},
+            {"role": "system", "content": "Kamu adalah asisten AI yang membuat ringkasan singkat dan akurat dari teks yang diberikan. Fokus pada poin utama dan hindari detail yang tidak relevan."},
             {"role": "user", "content": prompt},
         ],
         "temperature": 0.7,
+        "max_tokens": 500,  # Batasi output untuk efisiensi
     }
 
     async with aiohttp.ClientSession() as session:
         try:
-            async with session.post(OPENROUTER_API_URL, json=payload, headers=headers, timeout=90) as response:
-                logger.info(f"OpenRouter API response status: {response.status} in {time.time() - start_time:.2f} seconds")
+            logger.info(f"Sending request to OpenRouter at {time.time() - start_time:.2f} seconds")
+            async with session.post(OPENROUTER_API_URL, json=payload, headers=headers, timeout=60) as response:
+                elapsed_time = time.time() - start_time
+                logger.info(f"OpenRouter API response status: {response.status} in {elapsed_time:.2f} seconds")
+                response_text = await response.text()
+                logger.info(f"OpenRouter API response body: {response_text}")
                 if response.status != 200:
-                    error_text = await response.text()
-                    logger.error(f"OpenRouter API error: {error_text}")
+                    logger.error(f"OpenRouter API error: {response_text}")
                     raise HTTPException(status_code=500, detail=f"Gagal menghubungi API: {response.status}")
                 data = await response.json()
                 if "choices" not in data or not data["choices"]:
                     logger.error("OpenRouter API response missing choices")
-                    raise HTTPException(status_code=500, detail="API tidak mengembalikan konten.")
+                    raise HTTPException(status_code=500, detail="API tidak mengembalikan konten. Kemungkinan teks terlalu panjang atau model gagal memproses.")
+                summary = data["choices"][0]["message"]["content"].strip()
                 logger.info(f"Summarization completed in {time.time() - start_time:.2f} seconds")
-                return data["choices"][0]["message"]["content"].strip()
+                return summary
+        except aiohttp.ClientConnectionError as e:
+            logger.error(f"Connection error with OpenRouter: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Gagal menghubungi OpenRouter: Koneksi gagal.")
+        except aiohttp.ClientResponseError as e:
+            logger.error(f"Response error from OpenRouter: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Gagal menghubungi OpenRouter: {str(e)}")
+        except asyncio.TimeoutError:
+            logger.error("Timeout waiting for OpenRouter response")
+            raise HTTPException(status_code=500, detail="Permintaan ke OpenRouter timeout setelah 60 detik.")
         except Exception as e:
             logger.error(f"Error in summarize_text: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Gagal meringkas teks: {str(e)}")
