@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lintas AI - Summarize AI</title>
+</head>
+<body>
+    <div id="text-generator-container">
+        <!-- Sidebar Toggle Button -->
+        <button id="sidebar-toggle" class="sidebar-toggle">
+            <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+            <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" style="display: none;">
+                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854z"/>
+            </svg>
+        </button>
+
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="sidebar-top">
+                <h2>Lintas AI</h2>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                        </svg>
+                    </div>
+                    <span>Summarize AI</span>
+                </div>
+                <div class="sidebar-button" id="about-ai-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                    </svg>
+                    <span>Tentang AI</span>
+                </div>
+                <div class="sidebar-button" id="theme-toggle">
+                    <svg id="dark-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+                    </svg>
+                    <svg id="light-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display: none;">
+                        <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+                    </svg>
+                    <span>Mode gelap</span>
+                </div>
+                <div class="sidebar-button" id="home-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
+                        <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
+                    </svg>
+                    <span>Kembali ke halaman utama</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="main-content">
+            <div id="conversation-container"></div>
+            <div id="welcome-message">
+                <div class="welcome-logo">
+                    <img src="https://solusiai.free.nf/wp-content/uploads/2025/05/1746257506975.png" alt="Lintas AI Logo">
+                </div>
+                <h1>Summarize AI</h1>
+                <div class="welcome-description">
+                    <p>Ringkas teks atau file Anda dengan cepat dan akurat menggunakan AI.</p>
+                </div>
+            </div>
+            <div id="loading" class="loader" style="display: none;"></div>
+            <!-- About AI content - initially hidden -->
+            <div id="about-ai-content" style="display: none;">
+                <div class="message-wrapper ai-message">
+                    <div class="message">
+                        <div class="message-header">
+                            <div class="ai-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                </svg>
+                            </div>
+                            <span>Lintas AI</span>
+                        </div>
+                        <div class="message-content">
+                            <h2>Summarize AI</h2>
+                            <p>Adalah layanan kecerdasan buatan yang dirancang untuk membantu Anda meringkas teks atau file dengan cepat dan akurat.</p>
+                            <h3>Fitur Utama:</h3>
+                            <p>1. <strong>Ringkasan Otomatis</strong> - Ringkas teks atau file dalam format .txt, .docx, atau .pdf secara instan.</p>
+                            <p>2. <strong>Antarmuka Intuitif</strong> - Masukkan teks atau unggah file dengan mudah dan dapatkan hasil ringkasan secara cepat.</p>
+                            <h3>Cara Menggunakan:</h3>
+                            <p>Masukkan teks di kolom input atau unggah file, lalu tekan tombol kirim atau tombol Enter untuk mendapatkan hasil ringkasan.</p>
+                            <h3>Perhatian:</h3>
+                            <p>Meskipun AI dirancang untuk memberikan ringkasan yang akurat, harap selalu verifikasi hasil ringkasan untuk konteks penting, karena AI dapat sesekali membuat kesalahan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="input-container">
+                <div class="input-wrapper">
+                    <textarea id="promptInput" placeholder="Masukkan teks untuk diringkas..."></textarea>
+                    <button id="generateBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15a.5.5 0 0 0-.149-.149z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="file-input-wrapper">
+                    <input type="file" id="input_file" accept=".txt,.docx,.pdf" />
+                    <span class="file-input-button">Pilih File</span>
+                    <span class="file-input-label">Belum ada file yang dipilih</span>
+                </div>
+                <div class="input-footer">AI dapat membuat kesalahan. Periksa ringkasan penting.</div>
+            </div>
+        </div>
+    </div>
+
+<style>
+:root {
+    --primary-color: #19c37d;
+    --secondary-color: #16a670;
+    --text-color: #1f2328;
+    --text-secondary: #6b7280;
+    --background-light: #f9fafb;
+    --background-dark: #2d2d2d;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #3a3a3a;
+    --gray-900: #111827;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --sidebar-width: 240px;
+    --input-height: 48px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-light);
+    color: var(--text-color);
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body.dark-mode {
+    background-color: var(--background-dark);
+    color: #ffffff;
+    --text-color: #ffffff;
+    --text-secondary: #a0a0a0;
+    --background-light: #3a3a3a;
+    --gray-100: #374151;
+    --gray-200: #4b5563;
+    --gray-300: #6b7280;
+    --gray-400: #9ca3af;
+    --gray-500: #a0a0a0;
+    --gray-600: #e5e7eb;
+    --gray-700: #f3f4f6;
+    --gray-800: #4a4a4a;
+    --gray-900: #111827;
+}
+
+#text-generator-container {
+    display: flex;
+    flex: 1 0 auto;
+    height: 100%;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    z-index: 1001;
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    background-color: var(--gray-200);
+}
+
+body.dark-mode .sidebar-toggle:hover {
+    background-color: var(--gray-200);
+}
+
+#sidebar.sidebar-hidden + .sidebar-toggle {
+    left: 16px;
+}
+
+/* Sidebar Styles */
+#sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--background-light);
+    border-right: 1px solid var(--gray-200);
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    transition: transform 0.3s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+}
+
+#sidebar.sidebar-hidden {
+    transform: translateX(-100%);
+}
+
+.sidebar-top {
+    margin-bottom: 24px;
+}
+
+.sidebar-top h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: var(--radius-sm);
+}
+.user-info span {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 7px;
+}
+
+.sidebar-button {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-button:hover {
+    background-color: var(--gray-100);
+}
+
+body.dark-mode .sidebar-button:hover {
+    background-color: var(--gray-200);
+}
+
+.sidebar-button svg {
+    flex-shrink: 0;
+}
+
+.sidebar-button span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Main Content Area */
+#main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: var(--sidebar-width);
+    transition: margin-left 0.3s ease;
+    background-color: inherit;
+    height: 100vh;
+}
+
+#sidebar.sidebar-hidden + .sidebar-toggle + #main-content {
+    margin-left: 0;
+}
+
+#conversation-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 16px;
+    max-width: 768px;
+    margin: 0 auto;
+    width: 100%;
+    background-color: inherit;
+}
+
+#welcome-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    text-align: center;
+    flex: 0 0 auto;
+    background-color: inherit;
+}
+
+.welcome-logo {
+    margin-bottom: 16px;
+}
+
+.welcome-logo img {
+    max-width: 48px;
+}
+
+#welcome-message h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+body.dark-mode #welcome-message h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.welcome-description p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 500px;
+}
+
+/* Input Area Styles */
+#input-container {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--background-light);
+    padding: 16px;
+    border-top: 1px solid var(--gray-200);
+    max-width: 768px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+body.dark-mode #input-container {
+    background-color: var(--background-dark);
+    border-top-color: var(--gray-300);
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--background-light);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+body.dark-mode .input-wrapper {
+    background-color: var(--gray-800);
+    border-color: var(--primary-color);
+}
+
+#promptInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    background: transparent;
+    color: var(--text-color);
+    resize: none;
+    min-height: var(--input-height);
+    max-height: 200px;
+    line-height: 1.5;
+}
+
+#promptInput::placeholder {
+    color: var(--gray-400);
+}
+
+/* Custom File Input Styles */
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    position: relative;
+}
+
+#input_file {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-input-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: var(--gray-200);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    color: var(--text-color);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+body.dark-mode .file-input-button {
+    background-color: var(--gray-600);
+    border-color: var(--gray-500);
+}
+
+.file-input-button:hover {
+    background-color: var(--gray-300);
+}
+
+body.dark-mode .file-input-button:hover {
+    background-color: var(--gray-500);
+}
+
+.file-input-button::before {
+    content: '📎 ';
+    margin-right: 5px;
+}
+
+.file-input-label {
+    font-size: 14px;
+    color: var(--gray-500);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+#generateBtn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+}
+
+#generateBtn:hover {
+    color: var(--secondary-color);
+}
+
+#generateBtn:disabled {
+    color: var(--gray-400);
+    cursor: not-allowed;
+}
+
+.input-footer {
+    font-size: 12px;
+    color: var(--gray-500);
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* Message Styles */
+.message-wrapper {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.message {
+    width: 100%;
+    max-width: 768px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    background-color: var(--background-light);
+}
+
+body.dark-mode .message {
+    background-color: var(--gray-800);
+}
+
+.user-message .message {
+    background-color: var(--gray-100);
+}
+
+body.dark-mode .user-message .message {
+    background-color: var(--gray-800);
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.ai-icon,
+.user-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.ai-icon {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.user-icon {
+    background-color: var(--gray-200);
+    color: var(--gray-700);
+}
+
+body.dark-mode .user-icon {
+    background-color: var(--gray-600);
+    color: var(--gray-200);
+}
+
+.message-header span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.message-content {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.message-content h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.message-content h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 16px 0 8px;
+}
+
+body.dark-mode .message-content h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 16px 0 8px;
+    color: white;
+}
+
+body.dark-mode .message-content h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: white;
+}
+
+.message-content p {
+    margin-bottom: 8px;
+}
+
+.summary-section strong {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.copy-btn {
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background: var(--gray-200);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+body.dark-mode .copy-btn {
+    background: var(--gray-600);
+}
+
+.copy-btn:hover {
+    background: var(--gray-300);
+}
+
+body.dark-mode .copy-btn:hover {
+    background: var(--gray-500);
+}
+
+/* Loader */
+.loader {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loader:after {
+    content: " ";
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: 4px;
+    border-radius: 50%;
+    border: 4px solid var(--primary-color);
+    border-color: var(--primary-color) transparent var(--primary-color) transparent;
+    animation: loader 1.2s linear infinite;
+}
+
+@keyframes loader {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--gray-800);
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    z-index: 1000;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #sidebar {
+        width: var(--sidebar-width);
+        transform: translateX(-100%);
+    }
+
+    #sidebar:not(.sidebar-hidden) {
+        transform: translateX(0);
+    }
+
+    #main-content {
+        margin-left: 0;
+    }
+
+    #conversation-container {
+        padding: 16px;
+    }
+
+    #welcome-message {
+        padding: 16px;
+    }
+
+    #welcome-message h1 {
+        font-size: 24px;
+    }
+
+    .welcome-description p {
+        font-size: 14px;
+    }
+
+    .input-wrapper {
+        padding: 6px 10px;
+    }
+
+    #promptInput {
+        font-size: 14px;
+    }
+
+    .file-input-wrapper {
+        margin-top: 8px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const promptInput = document.getElementById('promptInput');
+    const inputFile = document.getElementById('input_file');
+    const fileInputLabel = document.querySelector('.file-input-label');
+    const generateButton = document.getElementById('generateBtn');
+    const conversationContainer = document.getElementById('conversation-container');
+    const welcomeMessage = document.getElementById('welcome-message');
+    const loadingIndicator = document.getElementById('loading');
+    const aboutAiButton = document.getElementById('about-ai-button');
+    const aboutAiContent = document.getElementById('about-ai-content');
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('dark-icon');
+    const lightIcon = document.getElementById('light-icon');
+    const homeButton = document.getElementById('home-button');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    // API URL
+    const API_URL = "https://solusiai.free.nf/wp-admin/admin-ajax.php";
+
+    // State variables
+    let isAboutAiOpen = false;
+
+    // Initialize the app
+    init();
+
+    // Event Listeners
+    promptInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey && (promptInput.value.trim() || inputFile.files[0])) {
+            e.preventDefault();
+            handleSubmit();
+        }
+    });
+
+    generateButton.addEventListener('click', function() {
+        if (promptInput.value.trim() || inputFile.files[0]) {
+            handleSubmit();
+        }
+    });
+
+    aboutAiButton.addEventListener('click', function() {
+        toggleAboutAi();
+    });
+
+    themeToggle.addEventListener('click', function() {
+        toggleDarkMode();
+    });
+
+    homeButton.addEventListener('click', function() {
+        window.location.href = 'index.html';
+    });
+
+    sidebarToggle.addEventListener('click', function() {
+        toggleSidebar();
+    });
+
+    inputFile.addEventListener('change', function() {
+        if (inputFile.files.length > 0) {
+            fileInputLabel.textContent = inputFile.files[0].name;
+        } else {
+            fileInputLabel.textContent = 'Belum ada file yang dipilih';
+        }
+    });
+
+    // Functions
+    function init() {
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            darkIcon.style.display = 'none';
+            lightIcon.style.display = 'inline';
+            themeToggle.querySelector('span').textContent = 'Mode terang';
+        }
+        showWelcomeMessage();
+        initSidebar();
+    }
+
+    function initSidebar() {
+        const isSidebarHidden = localStorage.getItem('sidebarHidden') === 'true';
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile && localStorage.getItem('sidebarHidden') === null) {
+            sidebar.classList.add('sidebar-hidden');
+            menuIcon.style.display = 'inline';
+            closeIcon.style.display = 'none';
+            localStorage.setItem('sidebarHidden', 'true');
+        } else if (isSidebarHidden) {
+            sidebar.classList.add('sidebar-hidden');
+            menuIcon.style.display = 'inline';
+            closeIcon.style.display = 'none';
+        } else {
+            sidebar.classList.remove('sidebar-hidden');
+            menuIcon.style.display = 'none';
+            closeIcon.style.display = 'inline';
+        }
+    }
+
+    function toggleSidebar() {
+        const isHidden = sidebar.classList.toggle('sidebar-hidden');
+        localStorage.setItem('sidebarHidden', isHidden);
+
+        if (isHidden) {
+            menuIcon.style.display = 'inline';
+            closeIcon.style.display = 'none';
+        } else {
+            menuIcon.style.display = 'none';
+            closeIcon.style.display = 'inline';
+        }
+    }
+
+    function handleSubmit() {
+        const userInput = promptInput.value.trim();
+        const file = inputFile.files[0];
+
+        if (!userInput && !file) {
+            showNotification("⚠️ Mohon masukkan teks atau unggah file.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('action', 'deepseek_summarize_text');
+
+        if (userInput) {
+            formData.append('prompt', userInput);
+            addMessageToUI('user', userInput, null);
+        } else if (file) {
+            formData.append('file', file);
+            addMessageToUI('user', null, file.name);
+        }
+
+        promptInput.value = '';
+        inputFile.value = '';
+        fileInputLabel.textContent = 'Belum ada file yang dipilih';
+        generateButton.disabled = true;
+
+        loadingIndicator.style.display = 'block';
+        welcomeMessage.style.display = 'none';
+        aboutAiContent.style.display = 'none';
+        isAboutAiOpen = false;
+
+        callSummarizeAPI(formData);
+    }
+
+    function callSummarizeAPI(formData) {
+        fetch(API_URL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`https error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                addMessageToUI('ai', data.data.text);
+            } else {
+                addMessageToUI('ai', 'Maaf, saya tidak dapat meringkas saat ini. Silakan coba lagi.');
+            }
+        })
+        .catch(error => {
+            addMessageToUI('ai', 'Maaf, terjadi kesalahan dalam menghubungi layanan AI. Silakan periksa koneksi internet Anda dan coba lagi.');
+        })
+        .finally(() => {
+            loadingIndicator.style.display = 'none';
+            generateButton.disabled = false;
+        });
+    }
+
+    function addMessageToUI(role, content, filename) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message-wrapper ${role}-message`;
+
+        let formattedContent;
+        if (role === 'ai') {
+            formattedContent = formatAiResponse(content);
+        } else {
+            formattedContent = formatUserMessage(content, filename);
+        }
+
+        messageDiv.innerHTML = `
+            <div class="message">
+                <div class="message-header">
+                    <div class="${role}-icon">
+                        ${role === 'ai' ? 
+                            `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                            </svg>` : 
+                            `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                            </svg>`}
+                    </div>
+                    <span>${role === 'ai' ? 'AI' : 'Anda'}</span>
+                </div>
+                <div class="message-content">
+                    ${formattedContent}
+                </div>
+            </div>
+        `;
+
+        conversationContainer.appendChild(messageDiv);
+        conversationContainer.scrollTop = conversationContainer.scrollHeight;
+
+        if (role === 'ai') {
+            const copyButton = messageDiv.querySelector('.copy-btn');
+            if (copyButton) {
+                copyButton.addEventListener('click', function() {
+                    const copyId = this.getAttribute('data-copy-id');
+                    const copyEl = document.getElementById(copyId);
+                    if (copyEl) {
+                        navigator.clipboard.writeText(copyEl.value).then(() => {
+                            showNotification("✅ Disalin!");
+                        }).catch(() => {
+                            showNotification("❌ Gagal menyalin.");
+                        });
+                    }
+                });
+            }
+        }
+    }
+
+    function formatUserMessage(content, filename) {
+        if (content) {
+            return `
+                <div class="summary-section">
+                    <p>${escapeHtml(content)}</p>
+                </div>
+            `;
+        } else if (filename) {
+            return `
+                <div class="summary-section">
+                    <p>File: ${escapeHtml(filename)}</p>
+                </div>
+            `;
+        }
+        return '';
+    }
+
+    function formatAiResponse(content) {
+        const uniqueId = Date.now() + Math.random().toString(36).substr(2, 5);
+        return `
+            <div class="summary-section">
+                <p>${escapeHtml(content)}</p>
+                <textarea id="copy-text-${uniqueId}" style="display:none;">${content}</textarea>
+                <button class="copy-btn" data-copy-id="copy-text-${uniqueId}">📋 Salin Teks</button>
+            </div>
+        `;
+    }
+
+    function escapeHtml(text) {
+        return text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
+    }
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.remove();
+        }, 2000);
+    }
+
+    function showWelcomeMessage() {
+        conversationContainer.innerHTML = '';
+        welcomeMessage.style.display = 'flex';
+        aboutAiContent.style.display = 'none';
+        isAboutAiOpen = false;
+    }
+
+    function toggleAboutAi() {
+        isAboutAiOpen = !isAboutAiOpen;
+        if (isAboutAiOpen) {
+            welcomeMessage.style.display = 'none';
+            aboutAiContent.style.display = 'block';
+            conversationContainer.innerHTML = '';
+            conversationContainer.appendChild(aboutAiContent);
+        } else {
+            showWelcomeMessage();
+        }
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+        if (isDarkMode) {
+            darkIcon.style.display = 'none';
+            lightIcon.style.display = 'inline';
+            themeToggle.querySelector('span').textContent = 'Mode terang';
+        } else {
+            darkIcon.style.display = 'inline';
+            lightIcon.style.display = 'none';
+            themeToggle.querySelector('span').textContent = 'Mode gelap';
+        }
+    }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'939b4291b8bdbcbf',t:'MTc0NjIyODEzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93c1e60dbf72454c',t:'MTc0NjYzMzI5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

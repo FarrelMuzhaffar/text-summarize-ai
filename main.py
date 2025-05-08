@@ -1,10 +1,11 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 import PyPDF2
 from docx import Document
 import aiohttp
-import io
 import os
+import io
 from typing import Optional
 
 app = FastAPI()
@@ -21,6 +22,11 @@ app.add_middleware(
 # Konfigurasi OpenRouter
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "your-api-key-here")  # Simpan di variabel lingkungan
+
+# Endpoint untuk menyajikan halaman utama
+@app.get("/")
+async def serve_html():
+    return FileResponse("text-summarize.html")
 
 async def extract_text_from_file(file: UploadFile) -> str:
     """
