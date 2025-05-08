@@ -1,0 +1,31 @@
+Python
+
+**pycache**/ \*.pyc \*.pyo \*.pyd .Python env/ venv/ ENV/ env.bak/ venv.bak/
+
+Environment variables
+
+.env
+
+IDE and editor files
+
+.vscode/ .idea/ \*.sublime-project \*.sublime-workspace
+
+System files
+
+.DS_Store Thumbs.db
+
+Logs
+
+\*.log
+
+Build artifacts
+
+dist/ build/ \*.egg-info/
+
+Testing
+
+.coverage coverage.xml \*.cache nosetests.xml pytest_cache/
+
+Local development
+
+\*.swp \*.swo
